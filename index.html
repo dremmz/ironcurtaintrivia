@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IRON FILTER</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    .answer-input {
+      background-color: #111;
+      border: 1px solid silver;
+      color: white;
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .submit-btn {
+      background-color: #222;
+      border: 1px solid silver;
+      color: white;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: silver;
+      color: black;
+    }
+    .hidden {
+      display: none;
+    }
+    #shock {
+      font-size: 40px;
+      color: red;
+      animation: flash 0.2s infinite;
+      margin-top: 30px;
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0.1; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="question" class="question"></div>
+    <input id="answerInput" class="answer-input" type="text" autocomplete="off" />
+    <button class="submit-btn" onclick="submitAnswer()">SUBMIT</button>
+  </div>
+  <div id="result" class="hidden">
+    <h2>THE CURTAIN HAS BEEN SHATTERED.</h2>
+    <p>Reload the page to play again.</p>
+  </div>
+  <div id="shock" class="hidden">SUCK MY DICK</div>
+
+  <script>
+    const questions = [
+      {
+        q: "What does the Iron Curtain represent?",
+        accepted: ["the line between art and entertainment", "the wall between real and fake", "the divide between truth and facade"]
+      },
+      {
+        q: "What symbol has been repeated throughout the rollout?",
+        accepted: ["silver frame", "frame", "double-headed eagle", "eagle", "albanian eagle", "carpet", "rug"]
+      },
+      {
+        q: "Who executive produced the entire album?",
+        accepted: ["jon-d", "jon", "jon d", "jond"]
+      },
+      {
+        q: "What does 'bonafide' mean?",
+        accepted: ["real", "authentic", "truth", "raw"]
+      },
+      {
+        q: "What date is Iron Curtain dropping?",
+        accepted: ["may 11th", "mothers day", "5/11", "may 11"]
+      },
+      {
+        q: "Will you presave the album once it's uploaded?",
+        accepted: ["yes"],
+        special: true
+      }
+    ];
+
+    let current = 0;
+    const questionEl = document.getElementById("question");
+    const answerInput = document.getElementById("answerInput");
+    const resultEl = document.getElementById("result");
+    const shockEl = document.getElementById("shock");
+
+    function normalize(str) {
+      return str.trim().toLowerCase();
+    }
+
+    function showQuestion() {
+      answerInput.value = "";
+      questionEl.textContent = questions[current].q;
+    }
+
+    function submitAnswer() {
+      const userAnswer = normalize(answerInput.value);
+      const accepted = questions[current].accepted.map(a => normalize(a));
+      const isCorrect = accepted.includes(userAnswer);
+
+      if (!isCorrect && questions[current].special) {
+        document.getElementById("game").classList.add("hidden");
+        shockEl.classList.remove("hidden");
+        return;
+      }
+
+      if (isCorrect) {
+        current++;
+        if (current >= questions.length) {
+          document.getElementById("game").classList.add("hidden");
+          resultEl.classList.remove("hidden");
+        } else {
+          showQuestion();
+        }
+      } else {
+        alert("Incorrect. The system resets.");
+        location.reload();
+      }
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
